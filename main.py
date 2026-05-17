@@ -1,7 +1,21 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import database
 
 app = Flask(__name__)
+
+
+@app.route("/api/data/<county>")
+def api_data_by_county(county):
+    rows = database.get_data_by_county(county)["rows"]
+    return jsonify(rows)
+
+
+@app.route("/api/counties")
+def api_counties():
+    counties = database.get_counties()["rows"]
+    counties = [c[0] for c in counties]
+
+    return jsonify(counties)
 
 
 @app.route("/")
